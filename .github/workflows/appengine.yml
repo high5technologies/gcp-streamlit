@@ -26,9 +26,27 @@ on:
 ##################################################################################################
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  set_env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Some check on branch
+        id: branch_check
+        run: |
+          echo "Running on branch ${{ github.ref }}"
+          echo "::set-output name=env_name::${GITHUB_REF#refs/heads/}"
+         
+      #- name: Use variable setup in previous step
+      #  run: echo "I'm using variable ${{ steps.branch_check.outputs.env_name }}"
+  
+    outputs:
+      env_name: ${{ steps.branch_check.outputs.env_name }} # job output ... consumed by next job
+
   deploy:
+    needs: [set_env] #orchestrates set_env job to run before terraform_deployment
     name: Deploying to Google Cloud
     runs-on: ubuntu-latest
+    environment: ${{ needs.set_env.outputs.env_name }}
+    
     defaults:
       run:
         working-directory: ./server
