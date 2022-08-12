@@ -28,29 +28,28 @@ on:
 jobs:
   deploy:
     name: Deploying to Google Cloud
-    permissions:
-      contents: 'read'
-      id-token: 'write'
     runs-on: ubuntu-latest
-    
+    defaults:
+      run:
+        working-directory: ./server
+
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
-
-    - name: GCP Auth
-      uses: 'google-github-actions/auth@v0'
+      uses: actions/checkout@v2
+    
+    - name: GCP Setup
+      uses: google-github-actions/setup-gcloud@master
       with:
-        credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }} 
-        
-    - name: Deploy to App Engine
-      id: deploy
-      uses: google-github-actions/deploy-appengine@v0.4.0
+        version: '290.0.1'
+        project_id: ${{ secrets.GCP_PROJECT }}
+        service_account_key: ${{ secrets.GOOGLE_CREDENTIALS }}
+        export_default_credentials: true
+    - id: Deploy
+      uses: google-github-actions/deploy-appengine@main
       with:
-        deliverables: app.yaml
-        version: v1
-        project: 'sports-analytics-dev'
-        flags: --no-cache
-        credentials: ${{ secrets.GOOGLE_CREDENTIALS }} # environment level secret per branch
+        project_id: ${{ secrets.GCP_PROJECT }}
+        credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
+        deliverables: server/app.yml
 
     - name: 'show output'
       run: 'echo ${{ steps.deploy.outputs.url }}'
