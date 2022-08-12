@@ -1,0 +1,47 @@
+#################################
+# Trigger = github action
+# executeion happens on the github side
+# backend = terraform cloud (TF Cloud is state file only - no config or additional needed)
+# TF Cloud Workspace - single workspace per state file - means every sport/env combo requires a new workspace
+#################################
+name: 'Streamlit GCP AppEngine Deployment'
+
+on:
+  push:
+    #paths:
+    #- 'basketball-nba/**'                     #config-here
+    branches:
+    - main
+    - dev
+  #pull_request:
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+#env:
+#  sport: basketball-nba                      #config-here
+
+##################################################################################################
+# No changes below here
+##################################################################################################
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  deploy:
+    name: Deploying to Google Cloud
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Deploy to App Engine
+      id: deploy
+      uses: google-github-actions/deploy-appengine@v0.2.0
+      with:
+        deliverables: app.yaml
+        version: v1
+        project_id: ${{ secrets.GCP_PROJECT }}
+        credentials: ${{ secrets.GOOGLE_CREDENTIALS }} # environment level secret per branch
+
+    - name: Test
+      run: curl "${{ steps.deploy.outputs.url }}"
