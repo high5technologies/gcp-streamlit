@@ -46,10 +46,10 @@ jobs:
     name: Deploying to Google Cloud
     runs-on: ubuntu-latest
     environment: ${{ needs.set_env.outputs.env_name }}
-    
-    defaults:
-      run:
-        working-directory: ./server
+
+    #defaults:
+    #  run:
+    #    working-directory: ./server
 
     steps:
     - name: Checkout
@@ -66,7 +66,7 @@ jobs:
       with:
         project_id: ${{ secrets.GCP_PROJECT }}
         credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
-        deliverables: server/app.yml
+        deliverables: app.yml
 
     - name: 'show output'
       run: 'echo ${{ steps.deploy.outputs.url }}'
