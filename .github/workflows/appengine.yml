@@ -37,6 +37,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
+    - name: GCP Auth
+      uses: 'google-github-actions/auth@v0'
+      with:
+        workload_identity_provider: '${{ secrets.WIF_PROVIDER_NAME }}'
+        service_account: '${{ secrets.APPENGINE_DEPLOY_SA_EMAIL }}'
 
     - name: Deploy to App Engine
       id: deploy
@@ -44,9 +49,9 @@ jobs:
       with:
         deliverables: app.yaml
         version: v1
-        project_id: 'sports-analytics-dev'
+        project: 'sports-analytics-dev'
         flags: --no-cache
         credentials: ${{ secrets.GOOGLE_CREDENTIALS }} # environment level secret per branch
 
-    - name: Test
-      run: curl "${{ steps.deploy.outputs.url }}"
+    - name: 'show output'
+      run: 'echo ${{ steps.deploy.outputs.url }}'
