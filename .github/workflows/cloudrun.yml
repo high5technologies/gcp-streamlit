@@ -76,7 +76,7 @@ jobs:
       run: docker push $IMAGE_NAME
 
     - name: Deploy Docker image
-      run: gcloud run deploy streamlit_test ${{ secrets.GCP_PROJECT_ID }} --image $IMAGE_NAME --region us-central1 --platform managed
+      run: gcloud run deploy streamlit-test ${{ secrets.GCP_PROJECT_ID }} --image $IMAGE_NAME --region us-central1 --platform managed
 
     #- id: Deploy
     #  uses: google-github-actions/deploy-appengine@main
