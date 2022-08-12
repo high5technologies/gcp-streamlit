@@ -28,11 +28,15 @@ on:
 jobs:
   deploy:
     name: Deploying to Google Cloud
+    permissions:
+      contents: 'read'
+      id-token: 'write'
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
+
 
     - name: Deploy to App Engine
       id: deploy
@@ -40,7 +44,7 @@ jobs:
       with:
         deliverables: app.yaml
         version: v1
-        project_id: sports-analytics-dev
+        project_id: 'sports-analytics-dev'
         flags: --no-cache
         credentials: ${{ secrets.GOOGLE_CREDENTIALS }} # environment level secret per branch
 
