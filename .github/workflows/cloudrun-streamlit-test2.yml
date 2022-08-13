@@ -7,7 +7,7 @@ name: 'Streamlit-test2 GCP Cloud Run Deployment'
 on:
   push:
     paths:
-    - 'test/streamlit-test2/**'                     #config-here
+    - 'streamlit-test2/**'                     #config-here
     branches:
     - main
     - dev
