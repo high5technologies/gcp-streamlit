@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ needs.set_env.outputs.env_name }}
     env:
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT }}/$service-image
+      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT }}/{{ $service }}-image
     #defaults:
     #  run:
     #    working-directory: ./server
