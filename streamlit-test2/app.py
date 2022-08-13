@@ -8,3 +8,4 @@ if st.checkbox('Show dataframe'):
       columns=['a', 'b', 'c'])
 
    chart_data
+   
