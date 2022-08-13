@@ -16,9 +16,11 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+
 env:
   #sport: test
-  service: streamlit-test2                      #config-here
+  SERVICE: streamlit-test2                      #config-here
+  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT }}/streamlit-test2-image
 
 ##################################################################################################
 # No changes below here
@@ -45,9 +47,9 @@ jobs:
     name: Deploying to Google Cloud
     runs-on: ubuntu-latest
     environment: ${{ needs.set_env.outputs.env_name }}
-    env:
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT }}/streamlit-test2-image
-      #{{ $service }}
+    #env:
+    #  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT }}/streamlit-test2-image
+    #  #{{ $service }}
     #defaults:
     #  run:
     #    working-directory: ./server
@@ -55,7 +57,7 @@ jobs:
     defaults:
       run:
         #shell: bash
-        working-directory: ${{ env.service }} # set the folder to pull code from
+        working-directory: ${{ env.SERVICE }} # set the folder to pull code from
 
     steps:
     - name: Checkout
@@ -83,5 +85,5 @@ jobs:
       run: docker push $IMAGE_NAME
 
     - name: Deploy Docker image
-      run: gcloud run deploy ${{ env.service }} ${{ secrets.GCP_PROJECT_ID }} --image $IMAGE_NAME --region us-central1 --platform managed
+      run: gcloud run deploy ${{ env.SERVICE }} ${{ secrets.GCP_PROJECT_ID }} --image $IMAGE_NAME --region us-central1 --platform managed
 
